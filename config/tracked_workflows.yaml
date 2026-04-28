@@ -1,98 +1,81 @@
-page_title: LF Builds
-copier_project: lincc-frameworks/python-project-template
+page_title: homeCore Builds
 
-repos:  
-  - repo: asv-formatter
-    owner: lincc-frameworks
-    smoke-test: smoke-test.yml
-    live-build: testing-and-coverage.yml
-
-  - repo: citation-compass
-    owner: lincc-frameworks
-    smoke-test: smoke-test.yml
-    benchmarks: asv-nightly.yml
-    live-build: testing-and-coverage.yml
-
-  - repo: hats
-    owner: astronomy-commons
-    smoke-test: smoke-test.yml
-    benchmarks: asv-nightly.yml
-    live-build: testing-and-coverage.yml
-
-  - repo: hats-cloudtests
-    owner: astronomy-commons
-    smoke-test: smoke-test.yml
-    benchmarks: asv-nightly.yml
-    live-build: testing-and-coverage.yml
-
-  - repo: hats-import
-    owner: astronomy-commons
-    smoke-test: smoke-test.yml
-    live-build: testing-and-coverage.yml
-
-  - repo: hyrax
-    owner: lincc-frameworks
-    smoke-test: smoke-test.yml
-    build-docs: build-documentation.yml
-    benchmarks: asv-nightly.yml
-    live-build: testing-and-coverage.yml
-
-  - repo: kbmod
-    owner: dirac-institute
-    smoke-test: canary_builds.yaml
-    build-docs: build_docs.yaml
-    live-build: pr_tests.yaml
-  
-  - repo: koffi
-    owner: lincc-frameworks
-    smoke-test: smoke-test.yml
-    live-build: testing-and-coverage.yml
-  
-  - repo: lf-workflow-dash
-    owner: lincc-frameworks
-    smoke-test: smoke-test.yml
-    live-build: testing-and-coverage.yml
-    other_workflows: 
-      - main.yml
-
-  - repo: lsdb
-    owner: astronomy-commons
-    smoke-test: smoke-test.yml
-    benchmarks: asv-nightly.yml
-    live-build: testing-and-coverage.yml
-      
-  - repo: nested-pandas
-    owner: lincc-frameworks
-    smoke-test: smoke-test.yml
-    build-docs: build-documentation.yml
-    benchmarks: asv-nightly.yml
-    live-build: testing-and-coverage.yml
-      
-  - repo: python-project-template
-    owner: lincc-frameworks
+repos:
+  # ── Core ────────────────────────────────────────────────────────────────
+  - repo: homeCore
+    owner: homeCore-io
     live-build: ci.yml
-    smoke-test: smoke-test.yml
-  
-  - repo: pre-commit-hooks
-    owner: lincc-frameworks
-    live-build: testing-and-coverage.yml
-    smoke-test: smoke-test.yml
+    other_workflows:
+      - release.yml
 
-  - repo: lightcurvelynx
-    owner: lincc-frameworks
-    smoke-test: smoke-test.yml
-    benchmarks: asv-nightly.yml
-    live-build: testing-and-coverage.yml
+  # ── Plugins ─────────────────────────────────────────────────────────────
+  - repo: hc-hue
+    owner: homeCore-io
+    live-build: ci.yml
+    other_workflows:
+      - release.yml
 
-  - repo: uncle-val
-    owner: lincc-frameworks
-    smoke-test: smoke-test.yml
-    live-build: testing-and-coverage.yml
-  
-extra_links: 
-  - text: LSDB Dash
-    url: https://lincc-frameworks.github.io/lf-workflow-dash/lsdb.html
-  - text: RAIL Dash
-    url: https://lincc-frameworks.github.io/lf-workflow-dash/rail.html
-  - text: Incubator Dash
-    url: https://lincc-frameworks.github.io/lf-workflow-dash/incubator.html
+  - repo: hc-yolink
+    owner: homeCore-io
+    live-build: ci.yml
+    other_workflows:
+      - release.yml
+
+  - repo: hc-lutron
+    owner: homeCore-io
+    live-build: ci.yml
+    other_workflows:
+      - release.yml
+
+  - repo: hc-sonos
+    owner: homeCore-io
+    live-build: ci.yml
+    other_workflows:
+      - release.yml
+
+  - repo: hc-wled
+    owner: homeCore-io
+    live-build: ci.yml
+    other_workflows:
+      - release.yml
+
+  - repo: hc-isy
+    owner: homeCore-io
+    live-build: ci.yml
+    other_workflows:
+      - release.yml
+
+  - repo: hc-zwave
+    owner: homeCore-io
+    live-build: ci.yml
+    other_workflows:
+      - release.yml
+
+  - repo: hc-caseta
+    owner: homeCore-io
+    live-build: ci.yml
+    other_workflows:
+      - release.yml
+
+  - repo: hc-thermostat
+    owner: homeCore-io
+    live-build: ci.yml
+    other_workflows:
+      - release.yml
+
+  - repo: hc-ecowitt
+    owner: homeCore-io
+    live-build: ci.yml
+    other_workflows:
+      - release.yml
+
+  # ── Clients ─────────────────────────────────────────────────────────────
+  - repo: hc-tui
+    owner: homeCore-io
+    live-build: ci.yml
+    other_workflows:
+      - release.yml
+
+  # Repos without CI/Release workflows yet (omitted until wired):
+  #   hc-plugin-sdk-rs, hc-captest, hc-scripts (reusable workflows only),
+  #   hc-web-leptos, hc-mcp, plus the inactive client variants.
