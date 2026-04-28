@@ -1,113 +1,57 @@
-<img src="https://github.com/lincc-frameworks/tape/blob/main/docs/DARK_Combo_sm.png?raw=true" width="300" height="100">
+# homeCore Workflow Dashboard
 
+[![Live dashboard](https://img.shields.io/badge/dashboard-homecore.io-blue?style=flat-square)](https://homecore.io/lf-workflow-dash/)
 
-# LF Workflow Dash
+CI / Release status across every active homeCore-io repo, refreshed every
+15 minutes. Forked from
+[lincc-frameworks/lf-workflow-dash](https://github.com/lincc-frameworks/lf-workflow-dash).
 
-[![view](https://img.shields.io/badge/view:-666666?style=for-the-badge)](#)
-[![link-to-dash](https://img.shields.io/badge/LF_Dashboard-7b6db0?style=for-the-badge)](https://lincc-frameworks.github.io/lf-workflow-dash/)
-[![link-to-rail-dash](https://img.shields.io/badge/RAIL_Dashboard-b08b3d?style=for-the-badge)](https://lincc-frameworks.github.io/lf-workflow-dash/rail.html)
-[![link-to-rail-dash](https://img.shields.io/badge/Incubator_Dashboard-ECD53F?style=for-the-badge)](https://lincc-frameworks.github.io/lf-workflow-dash/incubator.html)
+## What's tracked
 
-**LF Workflow Dash** is your easy solution for monitoring and managing GitHub Actions workflows. 
+`config/tracked_workflows.yaml` lists each repo + the workflows the dashboard
+shows. Today: `homeCore` + 10 plugins + `hc-tui`, with `ci.yml` shown as
+"Live Build" and `release.yml` listed under "Other Workflows".
 
-Track workflows across any number of repositories, check status and other relevant metrics, and quickly modify via yaml, all in one customizable dashboard.
+To add a repo, add a block to `tracked_workflows.yaml`:
 
-Powered by the [GitHub REST API](https://docs.github.com/en/rest), **LF Workflow Dash** regularly retrieves data on specified GitHub Actions workflow runs and updates the dashboard HTML. This process is managed through scheduled GitHub workflows, and the output can be hosted easily using GitHub Pages.
+```yaml
+- repo: hc-newthing
+  owner: homeCore-io
+  live-build: ci.yml
+  other_workflows:
+    - release.yml
+```
 
-## Getting Started
+…then either push to `main` (next cron tick picks it up) or force a refresh
+with:
 
-Click any of the badges at the top of the README to view a dashboard. 
+```sh
+gh workflow run main.yml --repo homeCore-io/lf-workflow-dash --ref main
+```
 
-Keep reading to learn about modifying an existing dashboard, or how to build your own dashboard.
+## How it deploys
 
-## Modify the LF Dashboard
+- `*/15 * * * *` cron in `.github/workflows/main.yml` runs `update_dashboard.py`,
+  which writes `html/index.html`.
+- `JamesIves/github-pages-deploy-action@v4` pushes `html/` to the `gh-pages`
+  branch.
+- GitHub Pages serves `gh-pages` at the org's custom domain `homecore.io`,
+  which redirects to https://homecore.io/lf-workflow-dash/.
 
-1. **Modify the YAML in this repo**
-   
-   Modify `config/tracked_workflows.yaml` to customize the [LF dashboard](https://lincc-frameworks.github.io/lf-workflow-dash/). Add or remove repositories and workflows as needed. The format to follow is:
+## Per-repo badges
 
-   ```yaml
-   repos:
-      - repo: REPO_NAME
-         owner: OWNER_NAME # github organization
-         smoke-test: smoke-test.yml
-         build-docs: build-documentation.yml
-         benchmarks: asv-nightly.yml
-         live-build: testing-and-coverage.yml
-         other_workflows: 
-         # Add more workflows if necessary
-   ```
+Every tracked repo's README header carries three badges — CI status,
+Release status, and a "builds → dashboard" link to this dashboard. See the
+`docs(readme): add CI/Release status + Dashboard badges to header` commit
+across the tracked repos for the canonical pattern.
 
-   We have columns for these 4 workflows, and the value should be the leaf yaml
-   file name. If you have additional workflows, you can add them as `other_workflows`.
+## Upstream changes
 
-2. **Or, submit an Issue**
+This is a hard fork (no longer in GitHub's fork network). To pull future
+upstream improvements:
 
-   If you'd like to suggest changes or need assistance with modifying the YAML, feel free to open an issue in this repository. We'll be happy to help!
-
-## Make Your Own Dashboard
-
-1. **Fork this Repository**
-   
-   Feel free to delete `rail.html` and `rail_tracked_workflows.yaml` right away.
-
-2. **Modify Your Tracked Workflows**
-
-   Follow the instructions in [Modify the LF Dashboard](https://github.com/lincc-frameworks/lf-workflow-dash/tree/main#modify-the-lf-dashboard) to make changes to your `tracked_workflows.yaml` file. 
-
-3. **Activate GitHub Actions**
-
-   Fresh forks require manual activation of GitHub Actions. Visit the "Actions" tab in your repository and enable the workflows.
-
-   When enabled, the github workflow `.github/workflows/main.yml` will run every
-   15 minutes to refresh the status of your dashboard.
-
-4. **Authorization**
-
-   **GitHub builds:** Your personal access token will be automatically generated when running the workflow on GitHub.
-
-   **Local builds:** To build the HTML locally, run the following command in your repository:
-
-     ```shell
-     python update_dashboard.py PERSONAL_ACCESS_TOKEN ./config/tracked_workflows.yaml index.html
-     ```
-
-   You can generate a personal access token following these [GitHub token generation steps](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
-
-   Feel free to replace `tracked_workflows.yaml` with whatever input yaml you'd like; likewise, replace `index.html` with your desired output path.
-
-5. **Page Title, Favicon, and Footer**
-
-   Remember to customize your `<title>` tag, your favicon, and the footer at the bottom of the page that links to the dashboard's repo.
-
-   Note that these need to be changed in `templates/dash_template.jinja`, as any changes made to an HTML file will be overwritten.
-
-7. **GitHub Pages (Optional)**
-
-   If you want to host your dashboard on GitHub Pages, you'll need to [set up your repository for GitHub Pages.](https://docs.github.com/en/pages/quickstart)
-   The github action for this repository will put the rendered HTML into a
-   `gh-pages` branch, that should be used for hosting your Pages.
-
-   Alternatively, you can use the [GitHub HTML Preview Tool](https://htmlpreview.github.io/?) to see your HTML without hosting it yourself. 
-
-   For example, here's [LF dashboard via GitHub HTML Preview](https://htmlpreview.github.io/?https://github.com/lincc-frameworks/lf-workflow-dash/blob/main/index.html).
-
-9. **Timezones (Optional)**
-
-   We specify timezones for both the commit message timestamp and the dashboard times. If you want a different timezone, update it in both `main.yml` and `update_dashboard.py`.
-
-
-
-That's it! You're ready to start monitoring your GitHub Actions workflows with your very own version of the LF dashboard.
-
-
-
-## Contributing
-
-Contributions are welcome! 
-
-If you have ideas for improvements or bug fixes, please feel free to open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/lincc-frameworks/lf-workflow-dash/blob/main/LICENSE) file for details.
+```sh
+git remote add upstream https://github.com/lincc-frameworks/lf-workflow-dash.git
+git fetch upstream
+git merge upstream/main   # or cherry-pick
+```

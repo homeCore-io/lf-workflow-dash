@@ -114,7 +114,10 @@ def read_yaml_file(file_path):
     # Get the page_title if it exists, otherwise set it to None
     page_title = data.get("page_title", None)
     extra_links = data.get("extra_links", [])
-    copier_project = data.get("copier_project", "lincc-frameworks/python-project-template")
+    # Project whose "latest release" version is rendered on the dashboard
+    # header. Override in config/tracked_workflows.yaml via `copier_project:`
+    # if you'd rather track a different repo's release cadence.
+    copier_project = data.get("copier_project", "homeCore-io/homeCore")
 
     repos = data.get("repos", [])
     all_projects = []

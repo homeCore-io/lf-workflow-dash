@@ -5,9 +5,9 @@ license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
 authors = [
-    { name = "LINCC Frameworks", email = "lincc-frameworks-team@lists.lsst.org" }
+    { name = "homeCore" }
 ]
-description = "Solution for monitoring and managing GitHub Actions workflows"
+description = "GitHub Actions workflow dashboard for the homeCore project (forked from lincc-frameworks/lf-workflow-dash)"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -27,7 +27,8 @@ dependencies = [
 ]
 
 [project.urls]
-"Source Code" = "https://github.com/lincc-frameworks/lf_workflow_dash"
+"Source Code" = "https://github.com/homeCore-io/lf-workflow-dash"
+"Upstream"    = "https://github.com/lincc-frameworks/lf-workflow-dash"
 
 # On a mac, install optional dependencies with `pip install '.[dev]'` (include the single quotes)
 [project.optional-dependencies]
