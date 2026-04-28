@@ -22,8 +22,6 @@ dependencies = [
     "pyyaml",
     "pytz",
     "requests",
-    "human_readable",
-    "semver",
 ]
 
 [project.urls]

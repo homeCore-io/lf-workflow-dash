@@ -16,7 +16,6 @@
     <table>
         <tr>
             <th colspan="1" scope="colgroup" style="width:150px">Repository</th>
-            <th colspan="1" scope="colgroup" style="width:50px">Copier<br>Version</th>
             {%- if contains_smoke %}
             <th colspan="3" scope="colgroup">Nightly Test</th>
             {%- endif %}
@@ -38,7 +37,6 @@
     {% for project in all_projects %}
     <tr>
         <td><a href="{{project.repo_url}}">{{project.repo}}</a></td>
-        <td class="{{project.copier_version_display_class}}">{{project.copier_version}}</td>
 
         {%- if contains_smoke %}
         <!-- Smoke Test -->

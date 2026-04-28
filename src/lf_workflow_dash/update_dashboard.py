@@ -1,7 +1,7 @@
 from jinja2 import Environment, FileSystemLoader
 
 from lf_workflow_dash.data_types import read_yaml_file
-from lf_workflow_dash.github_request import get_copier_version, update_copier_version, update_workflow_status
+from lf_workflow_dash.github_request import update_workflow_status
 
 
 def update_html(out_file, context):
@@ -26,7 +26,6 @@ def update_status(context, token):  # pragma: no cover
     """
     for project in context["all_projects"]:
         print(project.repo)
-        update_copier_version(project, token, context["copier_semver"])
         update_workflow_status(project.smoke_test, token)
         update_workflow_status(project.build_docs, token)
         update_workflow_status(project.benchmarks, token)
@@ -44,6 +43,5 @@ def do_the_work(token, datafile, outfile):  # pragma: no cover
         outfile (str): write to write the hyrated html file to
     """
     context = read_yaml_file(datafile)
-    get_copier_version(context, token)
     update_status(context, token)
     update_html(outfile, context)

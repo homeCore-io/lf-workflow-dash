@@ -2,7 +2,7 @@ from urllib.parse import urlencode
 
 import requests
 
-from lf_workflow_dash.string_helpers import coerce_copier_version, get_conclusion_time, read_copier_version
+from lf_workflow_dash.string_helpers import get_conclusion_time
 
 
 def update_workflow_status(workflow_elem, token):  # pragma: no cover
@@ -70,43 +70,3 @@ def update_workflow_status(workflow_elem, token):  # pragma: no cover
         conclusion = status_code
 
     workflow_elem.set_status(conclusion, conclusion_time, is_stale)
-
-
-def update_copier_version(project_data, token, copier_semver):  # pragma: no cover
-    """Find the copier version from the repo's `.copier_answers.yml` file.
-
-    Args:
-        project_data (ProjectData): container for the project's data
-        token (str): auth token for hitting the github API
-    """
-    request_url = (
-        f"https://raw.githubusercontent.com/{project_data.owner}/{project_data.repo}/main/.copier-answers.yml"
-    )
-
-    headers = {"Authorization": f"Bearer {token}"}
-    response = requests.request("GET", request_url, headers=headers, timeout=15)
-
-    project_data.set_copier_version(
-        coerce_copier_version(read_copier_version(response.content)), copier_semver
-    )
-
-
-def get_copier_version(context, token):  # pragma: no cover
-    """Get the current version of the copier template for projects.
-
-    Tolerates the project having zero releases (e.g. brand-new repos)
-    or being unset entirely — falls back to "" for the header display
-    rather than crashing the whole dashboard build.
-    """
-
-    project = context.get("copier_project") or ""
-    if not project:
-        context["copier_semver"] = ""
-        return
-
-    request_url = f"https://api.github.com/repos/{project}/releases/latest"
-    headers = {"Authorization": f"Bearer {token}"}
-    response = requests.request("GET", request_url, headers=headers, timeout=15)
-    response_json = response.json()
-    tag = response_json.get("tag_name", "")
-    context["copier_semver"] = coerce_copier_version(tag) if tag else ""
