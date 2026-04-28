@@ -92,10 +92,21 @@ def update_copier_version(project_data, token, copier_semver):  # pragma: no cov
 
 
 def get_copier_version(context, token):  # pragma: no cover
-    """Get the current version of the copier template for projects."""
+    """Get the current version of the copier template for projects.
 
-    request_url = f"https://api.github.com/repos/{context['copier_project']}/releases/latest"
+    Tolerates the project having zero releases (e.g. brand-new repos)
+    or being unset entirely — falls back to "" for the header display
+    rather than crashing the whole dashboard build.
+    """
+
+    project = context.get("copier_project") or ""
+    if not project:
+        context["copier_semver"] = ""
+        return
+
+    request_url = f"https://api.github.com/repos/{project}/releases/latest"
     headers = {"Authorization": f"Bearer {token}"}
     response = requests.request("GET", request_url, headers=headers, timeout=15)
     response_json = response.json()
-    context["copier_semver"] = coerce_copier_version(response_json["tag_name"])
+    tag = response_json.get("tag_name", "")
+    context["copier_semver"] = coerce_copier_version(tag) if tag else ""
